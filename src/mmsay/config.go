@@ -10,9 +10,10 @@ import (
 
 // Contains application configuration read in from config file
 type conf struct {
-    WebhookUrl string `yaml:webhook_url:`
-    User string `yaml:user:`
-    DefaultChannel string `yaml:default_channel:`
+    WebhookUrl *string `yaml:"webhookUrl"`
+    User *string `yaml:"user"`
+    DefaultChannel *string `yaml:"defaultChannel"`
+    Password *string `yaml:"password"`
 }
 
 // Search paths at which to look for config file
@@ -42,7 +43,7 @@ func (c *conf) LoadConfig() (*conf, error) {
     if err != nil {
         return nil, fmt.Errorf("could not read config file %s: %v", config_path, err)
     }
-    fmt.Println("yamlFile ", yamlFile)
+    //fmt.Println("yamlFile ", yamlFile)
     err = yaml.Unmarshal(yamlFile, c)
     if err != nil {
         return nil, fmt.Errorf("failed to parse config file %s: %v", config_path, err)
@@ -50,6 +51,19 @@ func (c *conf) LoadConfig() (*conf, error) {
     empty_config := conf{}
     if c == &empty_config {
         return nil, fmt.Errorf("config file was empty")
+    }
+
+    if c.User == nil {
+        return nil, fmt.Errorf("Missing setting from config : user")
+    }
+    if c.DefaultChannel == nil {
+        return nil, fmt.Errorf("Missing setting from config : defaultChannel")
+    }
+    if c.WebhookUrl == nil {
+        return nil, fmt.Errorf("Missing setting from config : webhookUrl")
+    }
+    if c.Password == nil {
+        return nil, fmt.Errorf("Missing setting from config : password")
     }
     return c, nil
 }

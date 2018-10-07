@@ -2,6 +2,7 @@
 package main
 
 import (
+    "os"
     "fmt"
     "stdinreader"
 
@@ -16,6 +17,6 @@ func main() {
     resp, err := mmsay.Say(input)
     _ = resp
     if err != nil {
-        fmt.Errorf("could not post message: %v", err)
+        fmt.Fprintf(os.Stdout, "could not post message: %v\n", err)
     }
 }
